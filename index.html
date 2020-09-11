@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+   <head>
+   	  <meta charset="utf-8">
+      <title>Dinamik il ilçe selectbox</title>
+      <!--- BOOTSTRAP --->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+   </head>
+   <body>
+      <div class="container">
+      	<form>
+         <div class="form-group">
+            <label for="il">İl</label>
+            <select class="form-control" name="il" required>
+            </select>
+         </div>
+         <div class="form-group">
+            <label for="ilce">İlçe</label>
+            <select class="form-control" name="ilce" disabled required>
+            </select>
+         </div>
+      </form>
+      </div>
+      <!--- BOOTSTRAP --->
+      <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+      <script type="text/javascript">
+	    var iller;
+	    var ilceler = [];
+
+	    $.getJSON('iller.json', function(data) {
+	      iller = data;
+
+	      data.forEach((item, i) => {
+	        $("select[name=il]").append("<option value='"+ item.il +"'>"+ item.il +"</option>")
+	      });
+
+	    });
+
+	    $(document).on("change", "select[name=il]", function() {
+	      var value = $("select[name=il]").val();
+	      $("select[name=ilce]").find("option").remove().end().append("<option value=''>Lütfen İlçe Seçiniz</option>");
+	      $("select[name=ilce]").attr("disabled", false);
+	      if(ilceler.length === 0) {
+	        $.getJSON('ilceler.json', function(data) {
+	          ilceler = data;
+
+	          setIlceler();
+	        });
+	      } else {
+	        setIlceler();
+	      }
+	    });
+
+	    function setIlceler() {
+	      var value = $("select[name=il]").val();
+
+	      var newList = ilceler.filter(e => e.il === value);
+
+	      newList.forEach((item, i) => {
+	        $("select[name=ilce]").append("<option value='"+ item.ilce +"'>"+ item.ilce +"</option>")
+	      });
+
+	    }
+	</script>
+   </body>
+</html>
